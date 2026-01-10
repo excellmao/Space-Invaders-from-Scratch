@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+bool game_running = false;
+
 #define GL_ERROR_CASE(glerror)\
     case glerror: snprintf(error, sizeof(error), "%s", #glerror)
 
@@ -56,6 +58,17 @@ bool validate_program(GLuint program){
 void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    switch(key){
+        case GLFW_KEY_ESCAPE:
+        if(action == GLFW_PRESS) game_running = false;
+        break;
+    default:
+        break;
+    }
 }
 
 struct Buffer
@@ -371,7 +384,7 @@ int main(int argc, char* argv[])
     uint32_t clear_color = rgb_to_uint32(0, 128, 0);
 
     int player_move_dir = 1;
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window) && game_running)
     {
         buffer_clear(&buffer, clear_color);
 
